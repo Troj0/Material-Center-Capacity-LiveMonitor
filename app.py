@@ -2,6 +2,7 @@ from tkinter import *
 import tkinter.messagebox
 import customtkinter
 from shelves import buttonPositionsM, buttonPositionsA_to_L
+from query import *
 
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -12,7 +13,7 @@ class App(customtkinter.CTk):
         super().__init__()
 
         self.title("KhPD MC Capacity")
-        self.geometry(f"{2400}x{580}")
+        self.geometry(f"{1920}x{1024}")
 
        # self.grid_columnconfigure(0, weight=1)
        # self.grid_columnconfigure((15, 18, 21, 27, 30, 33, 36, 39, 42, 45, 48), weight=1)
@@ -23,7 +24,7 @@ class App(customtkinter.CTk):
         self.sidebar_frame.grid_rowconfigure(4, weight=1)
         self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="Menu", font=customtkinter.CTkFont(size=20, weight="bold"))
         self.logo_label.grid(row=30, column=4, padx=20, pady=(0, 0))
-        self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame, text="Query", command=self.sidebar_button_event)
+        self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame, text="Query", command=materialQuery)
         self.sidebar_button_1.grid(row=30, column=5, padx=20, pady=10)
         self.sidebar_button_2 = customtkinter.CTkButton(self.sidebar_frame, text="Update", command=self.sidebar_button_event)
         self.sidebar_button_2.grid(row=30, column=6, padx=20, pady=10)
@@ -36,7 +37,7 @@ class App(customtkinter.CTk):
         self.appearance_mode_optionemenu.grid(row=30, column=9, padx=20, pady=(10, 10))
         self.scaling_label = customtkinter.CTkLabel(self.sidebar_frame, text="UI Scaling:", anchor="w")
         self.scaling_label.grid(row=30, column=10, padx=10, pady=(10, 10))
-        self.scaling_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["80%", "90%", "100%", "110%", "120%"],
+        self.scaling_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["70%", "80%", "90%", "100%", "110%", "120%"],
                                                                command=self.change_scaling_event)
         self.scaling_optionemenu.grid(row=30, column=11, padx=10, pady=(10, 10))
 
@@ -102,8 +103,8 @@ class App(customtkinter.CTk):
             elif buttonName.startswith('B') == True: frame_index = 9
             elif buttonName.startswith('A') == True: frame_index = 10
             frame = frames[frame_index]
-            
-            button = customtkinter.CTkButton(frame, text=buttonName, command=lambda btn=buttonName: self.sidebar_button_event(btn), width=2)
+            fgColor = colorOnContents(buttonName)
+            button = customtkinter.CTkButton(frame, text=buttonName, command=lambda btn=buttonName: locationButtonOnClick(btn), fg_color=fgColor, width=2)
             button.grid(row=row, column=column, padx=5, pady=13, sticky="nsew")
             
         ## M
@@ -123,8 +124,8 @@ class App(customtkinter.CTk):
         for i, buttonName in enumerate(sortedButtons_M):
             row = buttonPositionsM[buttonName][1]
             column = buttonPositionsM[buttonName][0]
-            
-            button = customtkinter.CTkButton(self.frame_M, text=buttonName, command=lambda btn=buttonName: self.sidebar_button_event(btn), width=2)
+            fgColor = colorOnContents(buttonName)
+            button = customtkinter.CTkButton(self.frame_M, text=buttonName, command=lambda btn=buttonName: locationButtonOnClick(btn), fg_color=fgColor, width=2)
             button.grid(row=row, column=column, padx=5, pady=4, sticky="nsew")
         
     def activate_progress_bar_event(self):
