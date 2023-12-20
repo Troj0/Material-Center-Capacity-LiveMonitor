@@ -3,6 +3,7 @@ import tkinter.messagebox
 import customtkinter
 from shelves import buttonPositionsM, buttonPositionsA_to_L
 from query import *
+import sched, time
 
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -85,7 +86,7 @@ class App(customtkinter.CTk):
                 
         # Sort the button list based on the dictionary values
         sortedButtonPositionsA_to_L = sorted(buttonListA_to_L, key=lambda x: buttonPositionsA_to_L[x])
-        
+        self.aToLButtons = []
         for i, buttonName in enumerate(sortedButtonPositionsA_to_L):
             row = buttonPositionsA_to_L[buttonName][1]
             column = buttonPositionsA_to_L[buttonName][0]
@@ -106,11 +107,10 @@ class App(customtkinter.CTk):
             fgColor = colorOnContents(buttonName)
             button = customtkinter.CTkButton(frame, text=buttonName, command=lambda btn=buttonName: locationButtonOnClick(btn), fg_color=fgColor, width=2)
             button.grid(row=row, column=column, padx=5, pady=13, sticky="nsew")
-            
+            self.aToLButtons.append(button)
         ## M
         buttonTextsM = "M"
         buttonNumbersM = ['01', '02', '03', '04', '05', '06', '07', '08']
-        buttonList_M = []
         buttonList_M = []
         
         for rep in range(len(buttonNumbersM)):
@@ -120,14 +120,19 @@ class App(customtkinter.CTk):
         
         # Sort the button list based on the dictionary values
         sortedButtons_M = sorted(buttonList_M, key=lambda x: buttonPositionsM[x])
-        
+        self.mButtons = []
         for i, buttonName in enumerate(sortedButtons_M):
             row = buttonPositionsM[buttonName][1]
             column = buttonPositionsM[buttonName][0]
             fgColor = colorOnContents(buttonName)
-            button = customtkinter.CTkButton(self.frame_M, text=buttonName, command=lambda btn=buttonName: locationButtonOnClick(btn), fg_color=fgColor, width=2)
-            button.grid(row=row, column=column, padx=5, pady=4, sticky="nsew")
-        
+            if buttonName == "M01A1":
+                button = customtkinter.CTkButton(self.frame_M, text=buttonName, command=lambda btn=buttonName: self.buttonStatusUpdate(), fg_color=fgColor, width=2)
+                button.grid(row=row, column=column, padx=5, pady=4, sticky="nsew")
+            else:
+                button = customtkinter.CTkButton(self.frame_M, text=buttonName, command=lambda btn=buttonName: locationButtonOnClick(btn), fg_color=fgColor, width=2)
+                button.grid(row=row, column=column, padx=5, pady=4, sticky="nsew")
+            self.mButtons.append(button)
+
     def activate_progress_bar_event(self):
         self.progressbar_1 = customtkinter.CTkProgressBar(self)
         self.progressbar_1.grid(row=6, column=1, columnspan=3, padx=(20, 10), pady=(5, 5), sticky="nsew")
@@ -148,8 +153,20 @@ class App(customtkinter.CTk):
 
     def sidebar_button_event(self, btn):
         print(btn)
+    
 
+    def buttonStatusUpdate(self):
+        for b in self.aToLButtons:
+            
+            fgColor = colorOnContents(b.cget("text"))
+            b.configure(fg_color = fgColor)
+        for b in self.mButtons:
+            
+            fgColor = colorOnContents(b.cget("text"))
+            b.configure(fg_color = fgColor)
+    
 if __name__ == "__main__":
     app = App()
     app.mainloop()
+    
 
