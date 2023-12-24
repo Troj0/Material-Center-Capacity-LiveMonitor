@@ -91,7 +91,7 @@ class App(customtkinter.CTk):
             row = buttonPositionsA_to_L[buttonName][1]
             column = buttonPositionsA_to_L[buttonName][0]
             frame_index = 1
-            # Adjust the column index to match the frame index in the list
+            # Adjust the column index to matchprint(existCount) the frame index in the list
             if buttonName.startswith('L') == True: frame_index = 0
             elif buttonName.startswith('K') == True: frame_index = 1
             elif buttonName.startswith('J') == True: frame_index = 2
@@ -105,11 +105,25 @@ class App(customtkinter.CTk):
             elif buttonName.startswith('A') == True: frame_index = 10
             frame = frames[frame_index]
             fgColor = colorOnContents(buttonName)
-            existCount = countRedButtons(buttonName)
-            print(existCount)
+            prefixGroup = ["A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L"]
+            DictExist = {buttonText: 0 for buttonText in buttonTexts}
+            DictNonExist = {buttonText: 0 for buttonText in buttonTexts}
+
+            buttonPrefix = ''
+            for prefix in prefixGroup:
+                if buttonName.startswith(prefix):
+                    buttonPrefix = prefix
+                    break
+
+            if(locationUsed):
+                DictExist[buttonPrefix] =+ 1
+            else:
+                DictNonExist[buttonPrefix] =+ 1
+            
             button = customtkinter.CTkButton(frame, text=buttonName, command=lambda btn=buttonName: locationButtonOnClick(btn), fg_color=fgColor, width=2)
             button.grid(row=row, column=column, padx=5, pady=13, sticky="nsew")
             self.aToLButtons.append(button)
+        print(DictExist, DictNonExist)
         ## M
         buttonTextsM = "M"
         buttonNumbersM = ['01', '02', '03', '04', '05', '06', '07', '08']
