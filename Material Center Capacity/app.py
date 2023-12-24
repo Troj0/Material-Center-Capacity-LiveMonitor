@@ -105,6 +105,8 @@ class App(customtkinter.CTk):
             elif buttonName.startswith('A') == True: frame_index = 10
             frame = frames[frame_index]
             fgColor = colorOnContents(buttonName)
+            existCount = countRedButtons(buttonName)
+            print(existCount)
             button = customtkinter.CTkButton(frame, text=buttonName, command=lambda btn=buttonName: locationButtonOnClick(btn), fg_color=fgColor, width=2)
             button.grid(row=row, column=column, padx=5, pady=13, sticky="nsew")
             self.aToLButtons.append(button)

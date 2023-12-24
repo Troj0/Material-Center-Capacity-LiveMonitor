@@ -27,7 +27,25 @@ def colorOnContents(buttonName):
 	cursor.execute("SELECT top (999) [itemnum],[itemname],[itemnamee],[unitnamee],[QtyBalance] FROM [Xp_CSAy2022].[dbo].[InventroyListWithLocation] where storloc1 = cast ('{}' as nvarchar) AND [QtyBalance] > 0 OR storloc2 = cast ('{}' as nvarchar) AND [QtyBalance] > 0 OR storloc3 = cast ('{}' as nvarchar) AND [QtyBalance] > 0 OR storloc4 = cast ('{}' as nvarchar) AND [QtyBalance] > 0 OR storloc5 = cast ('{}' as nvarchar) AND [QtyBalance] > 0 OR storloc6 = cast ('{}' as nvarchar) AND [QtyBalance] > 0 OR storloc7 = cast ('{}' as nvarchar) OR storloc8 = cast ('{}' as nvarchar) AND [QtyBalance] > 0;".format(buttonName, buttonName, buttonName, buttonName, buttonName, buttonName, buttonName, buttonName))
 	exist = cursor.fetchone()
 	fgColor = ''
-	
+
 	if exist is not None: fgColor = 'red'
 	else: fgColor = 'green'
 	return fgColor
+
+def countRedButtons(buttonName):
+	buttonTexts = ["A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L"]
+	buttonDictExist = {buttonText: 0 for buttonText in buttonTexts}
+	buttonDictNonExist = {buttonText: 0 for buttonText in buttonTexts}
+	
+	cursor.execute("SELECT top (999) [itemnum],[itemname],[itemnamee],[unitnamee],[QtyBalance] FROM [Xp_CSAy2022].[dbo].[InventroyListWithLocation] where storloc1 = cast ('{}' as nvarchar) AND [QtyBalance] > 0 OR storloc2 = cast ('{}' as nvarchar) AND [QtyBalance] > 0 OR storloc3 = cast ('{}' as nvarchar) AND [QtyBalance] > 0 OR storloc4 = cast ('{}' as nvarchar) AND [QtyBalance] > 0 OR storloc5 = cast ('{}' as nvarchar) AND [QtyBalance] > 0 OR storloc6 = cast ('{}' as nvarchar) AND [QtyBalance] > 0 OR storloc7 = cast ('{}' as nvarchar) OR storloc8 = cast ('{}' as nvarchar) AND [QtyBalance] > 0;".format(buttonName, buttonName, buttonName, buttonName, buttonName, buttonName, buttonName, buttonName))
+	exist = cursor.fetchone()
+
+	if exist is not None: 
+		for buttonText in buttonTexts:
+			if buttonName.startswith(buttonText):
+				buttonDictExist[buttonText] += 1
+	else: 
+		for buttonText in buttonTexts:
+			if buttonName.startswith(buttonText):
+				buttonDictNonExist[buttonText] += 1
+	return buttonDictExist, buttonDictNonExist
