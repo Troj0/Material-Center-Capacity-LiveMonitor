@@ -5,7 +5,7 @@ from shelves import buttonPositionsM, buttonPositionsA_to_L
 from query import *
 import sched, time
 
-customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
+customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
 
@@ -58,19 +58,55 @@ class App(customtkinter.CTk):
         
         # Frames
         # M Frame
-        self.frame_M = customtkinter.CTkFrame(self, corner_radius=10, fg_color="grey")
+        self.frame_M = customtkinter.CTkFrame(self, corner_radius=10, fg_color="#40403f")
         self.frame_M.grid(row=1, column=1, rowspan=24, padx=1, pady=5)
         
         # Other Frames
         frameCount = range(2, 13)
-        frames = []  # Create an empty list to store the frame objects
+        self.frames = []  # Create an empty list to store the frame objects
 
         # Create the frames and store them in the list
         for i in frameCount:
-            frame = customtkinter.CTkFrame(self, corner_radius=10, fg_color="grey")
+            frame = customtkinter.CTkFrame(self, corner_radius=10, fg_color="#40403f")
             frame.grid(row=1, column=i, rowspan=24, padx=1)
-            frames.append(frame)
+            self.frames.append(frame)
+        
+        buttonGenaration(self)
+
+    def activate_progress_bar_event(self):
+        self.progressbar_1 = customtkinter.CTkProgressBar(self)
+        self.progressbar_1.grid(row=6, column=1, columnspan=3, padx=(20, 10), pady=(5, 5), sticky="nsew")
+        self.progressbar_1.configure(mode="indeterminnate")
+
+        self.progressbar_1.start()
+
+    def open_input_dialog_event(self):
+        dialog = customtkinter.CTkInputDialog(text="Type in a number:", title="CTkInputDialog")
+        print(("CTkInputDialog:", dialog.get_input()))
+
+    def change_appearance_mode_event(self, new_appearance_mode: str):
+        customtkinter.set_appearance_mode(new_appearance_mode)
+
+    def change_scaling_event(self, new_scaling: str):
+        new_scaling_float = int(new_scaling.replace("%", "")) / 100
+        customtkinter.set_widget_scaling(new_scaling_float)
+
+    def sidebar_button_event(self, btn):
+        print("#########################\n", btn)
+        
+
+    def buttonStatusUpdate(self):
+        for b in self.aToLButtons:
             
+            fgColor = colorOnContents(b.cget("text"))
+            b.configure(fg_color = fgColor)
+        for b in self.mButtons:
+            
+            fgColor = colorOnContents(b.cget("text"))
+            b.configure(fg_color = fgColor)
+
+class buttonGenaration():
+    def __init__ (self, App):
         # Buttons
         buttonSuffix = ["A1", "A2", "B1", "B2", "C1", "C2", "D1", "D2"]
         ## A to L
@@ -105,7 +141,7 @@ class App(customtkinter.CTk):
             elif buttonName.startswith('C') == True: frame_index = 8
             elif buttonName.startswith('B') == True: frame_index = 9
             elif buttonName.startswith('A') == True: frame_index = 10
-            frame = frames[frame_index]
+            frame = App.frames[frame_index]
             fgColor = colorOnContents(buttonName)
             prefixGroup = ["A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L"]
             
@@ -138,47 +174,16 @@ class App(customtkinter.CTk):
         for i, buttonName in enumerate(sortedButtons_M):
             row = buttonPositionsM[buttonName][1]
             column = buttonPositionsM[buttonName][0]
-            fgColor = colorOnContents(buttonName)
+            #fgColor = colorOnContents(buttonName)
+            fgColor = "Orange"
             if buttonName == "M01A1":
-                button = customtkinter.CTkButton(self.frame_M, text=buttonName, command=lambda btn=buttonName: self.buttonStatusUpdate(), fg_color=fgColor, width=2)
+                button = customtkinter.CTkButton(App.frame_M, text=buttonName, command=lambda btn=buttonName: self.buttonStatusUpdate(), fg_color=fgColor, width=2)
                 button.grid(row=row, column=column, padx=5, pady=4, sticky="nsew")
             else:
-                button = customtkinter.CTkButton(self.frame_M, text=buttonName, command=lambda btn=buttonName: locationButtonOnClick(btn), fg_color=fgColor, width=2)
+                button = customtkinter.CTkButton(App.frame_M, text=buttonName, command=lambda btn=buttonName: locationButtonOnClick(btn), fg_color=fgColor, width=2)
                 button.grid(row=row, column=column, padx=5, pady=4, sticky="nsew")
             self.mButtons.append(button)
 
-    def activate_progress_bar_event(self):
-        self.progressbar_1 = customtkinter.CTkProgressBar(self)
-        self.progressbar_1.grid(row=6, column=1, columnspan=3, padx=(20, 10), pady=(5, 5), sticky="nsew")
-        self.progressbar_1.configure(mode="indeterminnate")
-
-        self.progressbar_1.start()
-
-    def open_input_dialog_event(self):
-        dialog = customtkinter.CTkInputDialog(text="Type in a number:", title="CTkInputDialog")
-        print(("CTkInputDialog:", dialog.get_input()))
-
-    def change_appearance_mode_event(self, new_appearance_mode: str):
-        customtkinter.set_appearance_mode(new_appearance_mode)
-
-    def change_scaling_event(self, new_scaling: str):
-        new_scaling_float = int(new_scaling.replace("%", "")) / 100
-        customtkinter.set_widget_scaling(new_scaling_float)
-
-    def sidebar_button_event(self, btn):
-        print(btn)
-    
-
-    def buttonStatusUpdate(self):
-        for b in self.aToLButtons:
-            
-            fgColor = colorOnContents(b.cget("text"))
-            b.configure(fg_color = fgColor)
-        for b in self.mButtons:
-            
-            fgColor = colorOnContents(b.cget("text"))
-            b.configure(fg_color = fgColor)
-    
 if __name__ == "__main__":
     app = App()
     app.mainloop()
