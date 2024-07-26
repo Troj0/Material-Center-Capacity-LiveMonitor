@@ -1,0 +1,1 @@
+A lightwight cutom GUI dashboard that actievly monitors 526 physical shelf locations. It provides data such as availablity, content display and a search function. Using it, the material Center team can easily know what locations are available for staging the next time they receive a new material batch.
