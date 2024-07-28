@@ -1,6 +1,7 @@
 config.ini
 buildCommand.txt
 .env
+app.spec
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
