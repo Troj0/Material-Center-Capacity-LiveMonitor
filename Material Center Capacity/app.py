@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import ttk
 import tkinter.messagebox
 import customtkinter
 from shelves import buttonPositionsM, buttonPositionsA_to_L
@@ -13,13 +14,13 @@ class App(customtkinter.CTk):
         super().__init__()
 
         self.title("KhPD MC Capacity")
-        self.geometry(f"{1920}x{1024}")
-        rows = [31]
+        self.geometry(f"{3840}x{2160}")
+        rows = [31, 32]
         for i in rows:
             self.rowconfigure(i, weight=1)
         #Labels
         labelCount = range(1, 13)
-        labelTexts = ['M\nReliability', 'L\nOil Train 3, 4 & 5', 'K\nOil Train 1&2', 'J\nPCU & Mech Shop', 'H\nPCU & Shipping', 'G\nGas Processing', 'F\nWIP', 'E\nUtilities', 'D\nI-Field', 'C\nGaskets & General', 'B\nGeneral', 'A\nGaskets & General']
+        labelTexts = ['M\nReliability', 'L\nOil Train 3, 4 & 5', 'K\nOil Train 1&2', 'J\nPCU & Mech Shop', 'H\nPCU & Shipping', 'G\nGas Processing', 'F\nUtilities', 'E\nWip', 'D\nI-Field', 'C\nGaskets & General', 'B\nGeneral', 'A\nGaskets & General']
 
         for i in labelCount:
             self.label = customtkinter.CTkLabel(self, text=labelTexts[i-1], font=customtkinter.CTkFont(size=20, weight="bold"))
@@ -40,17 +41,20 @@ class App(customtkinter.CTk):
         bg = buttonGenaration(self)
         self.sidebar_frame = customtkinter.CTkFrame(self, width=140, corner_radius=10)
         self.sidebar_frame.grid(row=100, column=0, columnspan=50, sticky="sew")
-        #self.sidebar_frame.grid_rowconfigure(4, weight=1)
+        # Needed for the developedByLabel
+        #self.sidebar_frame.grid_columnconfigure(12, weight=1)
         self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="Menu", font=customtkinter.CTkFont(size=20, weight="bold"))
         self.logo_label.grid(row=30, column=4, padx=20, pady=(0, 0))
         self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame, text="Query", font=customtkinter.CTkFont(size=20, weight="bold"), command=materialQuery)
         self.sidebar_button_1.grid(row=30, column=5, padx=20, pady=10)
         self.sidebar_button_2 = customtkinter.CTkButton(self.sidebar_frame, text="Update", font=customtkinter.CTkFont(size=20, weight="bold"), command=bg.updateFunction)
         self.sidebar_button_2.grid(row=30, column=6, padx=20, pady=10)
-        self.sidebar_button_3 = customtkinter.CTkButton(self.sidebar_frame, text="Future", font=customtkinter.CTkFont(size=20, weight="bold"), command=self.sidebar_button_event)
+        self.sidebar_button_3 = customtkinter.CTkButton(self.sidebar_frame, text="Modify Location", font=customtkinter.CTkFont(size=18, weight="bold"), command=self.sidebar_button_event)
         self.sidebar_button_3.grid(row=30, column=7, padx=20, pady=10)
         self.appearance_mode_label = customtkinter.CTkLabel(self.sidebar_frame, text="Appearance Mode:", anchor="w")
         self.appearance_mode_label.grid(row=30, column=8, padx=10, pady=(10, 10))
+        self.developedBy_label = customtkinter.CTkLabel(self.sidebar_frame, text="Developed By: Muhammad Alshammari", font=customtkinter.CTkFont(size=14, weight="normal"), anchor="w")
+        self.developedBy_label.grid(row=30, column=13, padx=10, pady=(10, 10))
         self.appearance_mode_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["Light", "Dark", "System"],
                                                                        command=self.change_appearance_mode_event)
         self.appearance_mode_optionemenu.grid(row=30, column=9, padx=20, pady=(10, 10))
@@ -79,18 +83,29 @@ class App(customtkinter.CTk):
         barPercentageNonExist = int(nonExistPercentage / 2) # for now equals 27
         barPercentageExist = int(50 - barPercentageNonExist) # for now equals 23
         #print(existPercentage, nonExistPercentage, barPercentageNonExist, barPercentageExist)
-        #Statistics Frames
-        container = customtkinter.CTkFrame(self, corner_radius=10, fg_color="#40403f")
-        for i in range(1, 50):
-            container.columnconfigure(i, weight=1)
+        #Statistics Containers
+        footerContainer = customtkinter.CTkFrame(self, corner_radius=10, fg_color="#40403f")
         
-        container.rowconfigure(1, weight=1)
-        container.grid(row=31, column=1, columnspan=50, sticky='nsew', padx=(5, 5), pady=(5, 5))
-        OverallUsedFrame = customtkinter.CTkFrame(container, corner_radius=10, fg_color="#135958")
+        # self.container_M = customtkinter.CTkFrame(self, corner_radius=10, fg_color="#40403f")
+        # self.container_M.grid(row=32, column=1, padx=1, sticky='ew')
+
+        # containerCount = range(2, 13)
+        # self.containers = []  
+        # for i in containerCount:
+        #     container = customtkinter.CTkFrame(self, corner_radius=10, fg_color="#40403f")
+        #     container.grid(row=32, column=i, padx=1, sticky='ew')
+        #     self.containers.append(frame)
+
+        for i in range(1, 50):
+            footerContainer.columnconfigure(i, weight=1)
+        
+        #footerContainer.rowconfigure(1, weight=1)
+        footerContainer.grid(row=34, column=1, columnspan=50, sticky='nsew', padx=(2, 2), pady=(5, 5))
+        OverallUsedFrame = customtkinter.CTkFrame(footerContainer, corner_radius=10, fg_color="#135958")
         OverallUsedFrame.grid(row=2, column=1, columnspan=barPercentageNonExist, sticky='ew')
-        OverallUsedFrame2 = customtkinter.CTkFrame(container, corner_radius=10, fg_color="#87302f")
+        OverallUsedFrame2 = customtkinter.CTkFrame(footerContainer, corner_radius=10, fg_color="#87302f")
         OverallUsedFrame2.grid(row=2, column=barPercentageNonExist, columnspan=barPercentageExist, sticky='ew',)
-        # OverallUsedFrame3 = customtkinter.CTkFrame(container, corner_radius=10, fg_color="#40403f")
+        # OverallUsedFrame3 = customtkinter.CTkFrame(footerContainer, corner_radius=10, fg_color="#40403f")
         # OverallUsedFrame3.grid(row=33, column=1, columnspan=2,  sticky='ew', padx=(20, 5), pady=(5, 5))
         #Overall Labels
         
@@ -129,6 +144,7 @@ class App(customtkinter.CTk):
         
 class buttonGenaration():
     def __init__ (self, App):
+        self.content_window = None
         # Buttons
         buttonSuffix = ["A1", "A2", "B1", "B2", "C1", "C2", "D1", "D2"]
         ## A to L
@@ -174,8 +190,8 @@ class buttonGenaration():
             initial_availability = locationUsed(buttonName)
             fgColor = "red" if initial_availability else "green"
             self.buttonListA_to_L_initialAvailability[buttonName] = {"buttonName": buttonName, "Used": locationUsed(buttonName)}
-            button = customtkinter.CTkButton(frame, text=buttonName, command=lambda btn=buttonName: locationButtonOnClick(btn), fg_color=fgColor, width=2)
-            if frame_index == 10: button.grid(row=row, column=column, padx=10, pady=13, sticky="nsew")
+            button = customtkinter.CTkButton(frame, text=buttonName, command=lambda btn=buttonName: self.open_content_window(btn), fg_color=fgColor, width=2)
+            if frame_index == 10: button.grid(row=row, column=column, padx=12, pady=13, sticky="nsew")
             else: button.grid(row=row, column=column, padx=5, pady=13, sticky="nsew")
             
             # Create the percentage label
@@ -213,8 +229,9 @@ class buttonGenaration():
             #fgColor = "red" if initial_availability else "green"
             self.buttonList_M_initialAvailability[buttonName] = {"buttonName": buttonName, "Used": locationUsed(buttonName)}
             fgColor = "Orange"
-            button = customtkinter.CTkButton(App.frame_M, text=buttonName, command=lambda btn=buttonName: locationButtonOnClick(btn), fg_color=fgColor, width=2)
+            button = customtkinter.CTkButton(App.frame_M, text=buttonName, command=lambda btn=buttonName: self.open_content_window(btn), fg_color=fgColor, width=2)
             button.grid(row=row, column=column, padx=5, pady=4, sticky="nsew")
+            button.configure(text_color="black")
             self.mButtons.append(button)
 
             # Store button object in self.button_objects
@@ -244,7 +261,96 @@ class buttonGenaration():
         #         # Assign fg_color based on current availability
         #         fg_color = colorOnContents(buttonName)
         #         updated_button.configure(fg_color=fg_color)
+    def get_transaction(self, callback, btn):
+        response = locationButtonOnClick(btn)
+        callback(response)
+    def process_location_data(self, txn_data):
+        if txn_data is not None:
+            self.content_window = locationContentTopLevel(self, txn_data)
+            self.content_window.lift()
 
+    def open_content_window(self, btn):
+        if self.content_window is None or not self.content_window.winfo_exists():
+            self.get_transaction(self.process_location_data, btn)
+        else:
+            self.content_window.focus()
+            
+class locationContentTopLevel(customtkinter.CTkToplevel):
+    def __init__(self, app_instance, txn_data, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.geometry(f'{1366}x{768}')
+        self.state("zoomed")
+        #self.app = app_instance
+        self.bg = buttonGenaration
+        self.txn_data = txn_data
+        if txn_data:
+            self.locationMainId = self.txn_data[0]['Location']
+        style = ttk.Style()
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+        self.frame_left = customtkinter.CTkFrame(master=self, width=170, corner_radius=0)
+        self.frame_left.grid(row=0, column=0, sticky='nswe')
+        first_txn_location = self.locationMainId
+        self.title('{} Content'.format(first_txn_location))
+        self.historylabel = customtkinter.CTkLabel(master=self.frame_left, text='{}'.format(self.locationMainId), font=customtkinter.CTkFont(size=24, weight='bold'), width=142)
+        self.historylabel.grid(row=2, column=0,padx=15, pady=15)
+        self.refresh_button = customtkinter.CTkButton(master=self.frame_left, text='Refresh', font=customtkinter.CTkFont(size=20, weight="bold"), width=142, command=self.refresh_data)
+        self.refresh_button.grid(row=5, column=0, padx=15, pady=15)
+        self.frame_right = customtkinter.CTkFrame(master=self)
+        self.frame_right.grid(row=0, column=1, sticky='nswe', padx=15, pady=15)
+        self.frame_left.grid_rowconfigure(0, minsize=10)
+        self.frame_left.grid_rowconfigure(8, minsize=20)
+        self.frame_left.grid_rowconfigure(11, minsize=10)
+        self.add_menu_display211 = customtkinter.CTkFrame(master=self.frame_right, corner_radius=15)
+        self.add_menu_display211.grid(pady=15, padx=15, sticky='nws')
+        columns = ('Material', 'Descripition', 'Quantity', 'Location', 'Owner Area')
+        treeview_height = 17
+        self.table = ttk.Treeview(master=self, columns=columns, selectmode='browse', show='headings')
+
+        style = ttk.Style(self)
+        # set ttk theme to "clam" which support the fieldbackground option
+        style.theme_use("clam")
+        style.configure("Treeview", background="#40403f", 
+                fieldbackground="#40403f", foreground="white")
+
+        style.configure('Treeview', rowheight=25, font=('Arial', 10), show='tree')
+        style.configure('Treeview.Heading', font=('Arial', 10, 'bold'))
+        
+        style.configure('Treeview.Cell', borderwidth=0.5, relief='solid')
+        for column in columns:
+            self.table.heading(column, text=column, anchor='center')
+            self.table.column(column, anchor='center')
+        self.table.column('#1', anchor='c', minwidth=46, width=46)
+        self.table.column('#2', anchor='w', minwidth=185, width=185)
+        self.table.column('#3', anchor='c', minwidth=112, width=12)
+        self.table.column('#4', anchor='c', minwidth=24, width=24)
+        self.table.column('#5', anchor='c', minwidth=24, width=24)
+        self.table.heading('Material', text='Material')
+        self.table.heading('Descripition', text='Descripition')
+        self.table.heading('Quantity', text='Quantity')
+        self.table.heading('Location', text='Location')
+        self.table.heading('Owner Area', text='Owner Area')
+        self.table.grid(row=0, column=1, sticky='nsew', padx=10, pady=10)
+        self.table.bind('<Motion>', 'break')
+        scrollbar = tkinter.Scrollbar(self, orient='vertical', command=self.table.yview)
+        scrollbar.grid(row=0, column=2, sticky='ns')
+        self.table.configure(yscrollcommand=scrollbar.set)
+        self.process_txn_data(self.txn_data)
+    
+    def process_txn_data(self, txn_data):
+        if txn_data is not None:
+            for txn in txn_data:
+                materialNo = txn['Material']
+                description = fetchDescription(materialNo)
+                self.table.insert('', 'end', values=(txn['Material'], 
+                                                    description['Description'],
+                                                    txn['Quantity'], 
+                                                    txn['Location'], 
+                                                    txn['Owner Area']))
+
+    def refresh_data(self):
+        self.table.delete(*self.table.get_children())
+        self.txn_data = self.bg.get_transaction(self, self.process_txn_data, self.locationMainId)
 
 if __name__ == "__main__":
     app = App()

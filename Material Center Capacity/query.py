@@ -18,11 +18,19 @@ def materialQuery(materialNo):
 		print (row)
 
 def locationButtonOnClick(buttonName):
-	#print("SELECT top (999) [itemnum],[itemname],[itemnamee],[unitnamee],[QtyBalance] FROM [Xp_CSAy2022].[dbo].[InventroyListWithLocation] where storloc1 = cast ('{}' as nvarchar);".format(buttonName))
+		#print("SELECT top (999) [itemnum],[itemname],[itemnamee],[unitnamee],[QtyBalance] FROM [Xp_CSAy2022].[dbo].[InventroyListWithLocation] where storloc1 = cast ('{}' as nvarchar);".format(buttonName))
+	txn = []
 	cursor.execute("SELECT ALL [itemnum],[QtyBalance],[unitnum],[batchnum],[expdate],[AreaName] FROM [Xp_CSAy2022].[dbo].[QtyBalanceWithChargesAndLocation] where [batchnum] = cast('{}' as nvarchar ) AND QtyBalance > 0;".format(buttonName))
-	print("################################\n")
-	for row in cursor.fetchall():
-		print (row)
+	for rows in cursor.fetchall():
+		txn.append({
+			"Material": rows[0],
+			"Quantity": rows[1],
+			"unitnum": rows[2],
+			"Location": rows[3],
+			"expdate": rows[4],
+			"Owner Area": rows[5]
+		})
+	return txn
 
 def colorOnContents(buttonName):
 	cursor.execute("SELECT ALL [itemnum],[QtyBalance],[unitnum],[batchnum],[expdate],[AreaName] FROM [Xp_CSAy2022].[dbo].[QtyBalanceWithChargesAndLocation] where [batchnum] = cast('{}' as nvarchar ) AND QtyBalance > 0;".format(buttonName))
@@ -32,6 +40,12 @@ def colorOnContents(buttonName):
 	if exist is not None: fgColor = 'red'
 	else: fgColor = 'green'
 	return fgColor
+
+def fetchDescription(materialNo):
+	cursor.execute("SELECT TOP 999 [itemname] FROM [Xp_CSAy2022].[dbo].[items] where itemnum = '{}'".format(materialNo))
+	row = cursor.fetchone()
+	description = {"Description": row[0]}
+	return description
 
 def locationUsed(buttonName):
 

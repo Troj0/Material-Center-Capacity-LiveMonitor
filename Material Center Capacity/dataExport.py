@@ -4,8 +4,8 @@ import pandas as pd
 try:
     conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};'
     'SERVER=SASTORE\SQLEXPRESS;'
-    'UID=;'
-    'PWD=;'
+    'UID=troj;'
+    'PWD=01250125;'
     'DATABASE=Xp_CSAy2022; Trusted_connection = yes')
 except pyodbc.Error as ex:
     sqlstate = ex.args[0]
