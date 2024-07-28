@@ -2,6 +2,7 @@ config.ini
 buildCommand.txt
 .env
 app.spec
+export_data.csv
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
