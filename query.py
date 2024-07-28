@@ -1,5 +1,4 @@
 import pyodbc
-import os
 
 creds = {}
 creds_file = open('config.ini')
