@@ -1,10 +1,29 @@
 import pyodbc
+import os
+
+creds = {}
+creds_file = open('.env')
+for line in creds_file:
+    line = line.strip()  # Remove leading and trailing whitespace
+    if "=" in line:
+        key, value = line.split("=", 1)
+        creds[key.strip()] = value.strip()  # Remove leading and trailing whitespace from key and value
+    else:
+        print(f"Invalid line format: {line.rstrip()}")
+creds
+
+# assign creds
+driver = 'ODBC Driver 17 for SQL Server'
+server = creds.get("SERVER")
+db = creds.get("DATABASE")
+user = creds.get("un")
+password = creds.get("password")
+
+# using pyodbc connect to MS SQL server usign credentials in .env 
+cnxn_str = f"DRIVER={driver};SERVER={server};DATABASE={db};UID={user};PWD={password}; Trusted_connection = yes;"
+cnxn = pyodbc.connect(cnxn_str)
 try:
-	conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};'
-						'SERVER=SASTORE\SQLEXPRESS;'
-						'UID=troj;'
-						'PWD=01250125;'
-						'DATABASE=Xp_CSAy2022; Trusted_connection = yes')
+	conn = cnxn
 except pyodbc.Error as ex:
         sqlstate = ex.args[0]
         if sqlstate == '42S22':
