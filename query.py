@@ -2,7 +2,7 @@ import pyodbc
 import os
 
 creds = {}
-creds_file = open('.env')
+creds_file = open('config.ini')
 for line in creds_file:
     line = line.strip()  # Remove leading and trailing whitespace
     if "=" in line:
